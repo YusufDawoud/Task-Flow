@@ -1,16 +1,44 @@
-# React + Vite
+# ⚡ TaskFlow — Enterprise-Grade Task Management Engineering
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TaskFlow is a high-performance, single-page client application (SPA) architected with **React** and styled via an atomic integration of **Bootstrap 5**. Designed around a unidirectional data flow paradigm, TaskFlow offers a streamlined, highly responsive interface for complex objective tracking, real-time aggregate statistics processing, and situational priority isolation.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🗺️ System Architecture & Data Flow
 
-## React Compiler
+TaskFlow relies on a **centralized state management strategy** housed within the master dashboard layer. State cascades downward via read-only props, while state modifications bubble upward through declarative action dispatches.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```text
+               +---------------------------------------+
+               |              App.jsx                  |
+               +---------------------------------------+
+                                   |
+                                   v
+               +---------------------------------------+
+               |            Dashboard.jsx              | <--- [State: tasks, currentPage]
+               +---------------------------------------+
+                                   |
+      +----------------------------+----------------------------+
+      |                            |                            |
+      v                            v                            v
++--------------+           +--------------+             +---------------+
+| Sidebar.jsx  |           |StatsCards.jsx|             |  TaskForm.jsx |
++--------------+           +--------------+             +---------------+
+(Sets Active Page)        (Computes Analytics)         (Dispatches Add Actions)
+      |
+      +----------------------------+
+                                   | (Conditional Page Swap)
+                                   v
+             +-------------------------------------------+
+             |  MyDay.jsx / Important.jsx / Completed.jsx |
+             +-------------------------------------------+
+                                   |
+                                   v
+             +-------------------------------------------+
+             |               TaskList.jsx                |
+             +-------------------------------------------+
+                                   |
+                                   v
+             +-------------------------------------------+
+             |               FilterBar.jsx               |
+             +-------------------------------------------+
